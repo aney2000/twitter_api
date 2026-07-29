@@ -18,14 +18,12 @@ module Types
       ids.map { |id| context.schema.object_from_id(id, context) }
     end
 
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    field :tweets, [Types::TweetType], null: false do
+      description 'Returns a list of all tweets'
+    end
 
-    # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World!"
+    def tweets
+      Tweet.all
     end
   end
 end

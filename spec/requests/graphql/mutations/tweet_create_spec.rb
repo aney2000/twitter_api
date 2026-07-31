@@ -42,7 +42,7 @@ RSpec.describe 'GraphQL Mutations: tweetCreate', type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(data['uuid']).to be_present
-      
+
       resource = Resource.last
       expect(resource.tweet).to eq(Tweet.last)
       expect(resource.title).to eq('12ft - Hop any paywall')

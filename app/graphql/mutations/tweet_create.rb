@@ -5,7 +5,7 @@ module Mutations
     argument :content, String, required: true
 
     field :tweet, Types::TweetType, null: true
-    field :errors, [String], null: false
+    field :errors, [ String ], null: false
 
     def resolve(content:)
       tweet = Tweet.new(content: content)
@@ -13,10 +13,10 @@ module Mutations
       if tweet.save
         # --------------------------------------------------------
         urls = UrlExtractor.call(content)
-        
+
         urls.each do |url|
           metadata = OpenGraphExtractor.call(url)
-          
+
           if metadata
             tweet.resources.create!(
               title: metadata[:title],

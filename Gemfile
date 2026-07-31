@@ -48,9 +48,9 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'rspec-rails'
+  gem "rspec-rails"
 end
 
 gem "graphql", "~> 2.6"
 
-gem 'nokogiri'
+gem "nokogiri"

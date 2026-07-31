@@ -5,8 +5,8 @@ RSpec.describe Resource, type: :model do
     it 'belongs to a tweet' do
       tweet = Tweet.create!(content: "Test")
       resource = Resource.new(
-        tweet: tweet, 
-        title: "Test Title", 
+        tweet: tweet,
+        title: "Test Title",
         url: "https://example.com"
       )
       expect(resource.tweet).to eq(tweet)

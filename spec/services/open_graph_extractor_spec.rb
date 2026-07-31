@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe OpenGraphExtractor do
   describe '.call' do
     let(:url) { 'https://12ft.io/' }
-    
+
     let(:html_body) do
       <<~HTML
         <html>
@@ -34,7 +34,7 @@ RSpec.describe OpenGraphExtractor do
 
     it 'returns nil if the url is invalid or fetching fails' do
       allow(URI).to receive(:open).and_raise(StandardError, "Net::ReadTimeout")
-      
+
       result = OpenGraphExtractor.call('https://bad-site.com')
       expect(result).to be_nil
     end

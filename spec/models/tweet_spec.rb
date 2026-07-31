@@ -17,7 +17,7 @@ RSpec.describe Tweet, type: :model do
   describe 'callbacks' do
     it 'automatically generates a UUID before creation' do
       tweet = Tweet.create!(content: 'My first tweet')
-      
+
       expect(tweet.uuid).to be_present
       expect(tweet.uuid).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
     end

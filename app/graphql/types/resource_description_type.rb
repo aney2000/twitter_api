@@ -7,8 +7,8 @@ module Types
 
     def image
       {
-        url: object.image_url || '',
-        byteSize: 0 
+        url: object.image_url || "",
+        byteSize: 0
       }
     end
   end

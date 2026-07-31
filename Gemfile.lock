@@ -369,6 +369,7 @@ DEPENDENCIES
   graphql (~> 2.6)
   image_processing (~> 1.2)
   kamal
+  nokogiri
   puma (>= 5.0)
   rails (~> 8.1.3)
   rspec-rails

@@ -52,3 +52,5 @@ group :development, :test do
 end
 
 gem "graphql", "~> 2.6"
+
+gem 'nokogiri'

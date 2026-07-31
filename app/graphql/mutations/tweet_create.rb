@@ -11,6 +11,23 @@ module Mutations
       tweet = Tweet.new(content: content)
 
       if tweet.save
+        # --------------------------------------------------------
+        urls = UrlExtractor.call(content)
+        
+        urls.each do |url|
+          metadata = OpenGraphExtractor.call(url)
+          
+          if metadata
+            tweet.resources.create!(
+              title: metadata[:title],
+              description: metadata[:description],
+              url: metadata[:url],
+              image_url: metadata[:image_url]
+            )
+          end
+        end
+        # --------------------------------------------------------
+
         {
           tweet: tweet,
           errors: []

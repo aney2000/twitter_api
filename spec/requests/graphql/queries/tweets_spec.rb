@@ -2,8 +2,16 @@ require 'rails_helper'
 
 RSpec.describe 'GraphQL Queries: tweets', type: :request do
   describe 'querying a list of tweets' do
-    let!(:tweet1) { Tweet.create!(content: 'Check this out: https://example.com') }
-    let!(:tweet2) { Tweet.create!(content: 'Another tweet here.') }
+    let!(:tweet) { Tweet.create!(content: 'Check this out: https://12ft.io/') }
+    
+    let!(:resource) do
+      tweet.resources.create!(
+        title: '12ft - Hop any paywall',
+        description: 'Show me a 10ft paywall',
+        url: 'https://12ft.io/',
+        image_url: 'https://12ft.io/og-banner.png'
+      )
+    end
 
     let(:query) do
       <<~GQL
@@ -25,19 +33,25 @@ RSpec.describe 'GraphQL Queries: tweets', type: :request do
       GQL
     end
 
-    it 'returns all tweets with their mapped fields' do
+    it 'returns all tweets with their mapped resources' do
       post '/graphql', params: { query: query }
 
       json = JSON.parse(response.body)
       data = json['data']['tweets']
 
       expect(response).to have_http_status(:ok)
-      expect(data.length).to eq(2)
       
-      expect(data.first['message']).to eq('Check this out: https://example.com')
-      expect(data.first['uuid']).to eq(tweet1.uuid)
+      first_tweet = data.first
+      expect(first_tweet['uuid']).to eq(tweet.uuid)
+      expect(first_tweet['message']).to eq('Check this out: https://12ft.io/')
       
-      expect(data.first['resources']).to be_an(Array)
+      first_resource = first_tweet['resources'].first
+      expect(first_resource['title']).to eq('12ft - Hop any paywall')
+      expect(first_resource['description']).to eq('Show me a 10ft paywall')
+      expect(first_resource['url']).to eq('https://12ft.io/')
+      
+      expect(first_resource['image']['url']).to eq('https://12ft.io/og-banner.png')
+      expect(first_resource['image']['byteSize']).to eq(0) 
     end
   end
 end

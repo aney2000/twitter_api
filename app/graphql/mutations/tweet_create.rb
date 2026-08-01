@@ -11,7 +11,6 @@ module Mutations
       tweet = Tweet.new(content: content)
 
       if tweet.save
-        # --------------------------------------------------------
         urls = UrlExtractor.call(content)
 
         urls.each do |url|
@@ -26,7 +25,6 @@ module Mutations
             )
           end
         end
-        # --------------------------------------------------------
 
         {
           tweet: tweet,

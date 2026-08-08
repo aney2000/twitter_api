@@ -73,4 +73,28 @@ RSpec.describe 'GraphQL Mutations: commentCreate', type: :request do
       expect(resource.image_url).to eq('https://12ft.io/og-banner.png')
     end
   end
+
+  context 'when the tweet uuid does not exist' do
+    let(:variables) do
+      {
+        input: {
+          tweetUuid: 'no-such-tweet-uuid',
+          content: 'Commenting into the void'
+        }
+      }
+    end
+
+    it 'returns a graphql error and creates nothing' do
+      expect {
+        post '/graphql', params: { query: mutation, variables: variables }
+      }.not_to change(Comment, :count)
+
+      json = JSON.parse(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(json['errors']).to be_present
+      expect(json['errors'].first['message']).to eq('Tweet not found')
+      expect(json.dig('data', 'commentCreate')).to be_nil
+    end
+  end
 end

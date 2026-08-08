@@ -10,6 +10,8 @@ module Mutations
 
     def resolve(tweet_uuid:, content:)
       tweet = Tweet.find_by(uuid: tweet_uuid)
+      raise GraphQL::ExecutionError, "Tweet not found" if tweet.nil?
+
       comment = tweet.comments.new(content: content)
 
       if comment.save

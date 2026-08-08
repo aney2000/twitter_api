@@ -23,7 +23,7 @@ module Types
     end
 
     def tweets
-      Tweet.all
+      Tweet.includes(:resources, comments: :resources)
     end
   end
 end

@@ -112,4 +112,51 @@ RSpec.describe 'GraphQL Queries: tweets', type: :request do
       expect(first_resource['image']['url']).to eq('https://12ft.io/og-banner.png')
     end
   end
+
+  describe 'query efficiency' do
+    let(:query) do
+      <<~GQL
+        query {
+          tweets {
+            uuid
+            message
+            resources {
+              title
+              url
+            }
+            comments {
+              uuid
+              message
+              resources {
+                title
+                url
+              }
+            }
+          }
+        }
+      GQL
+    end
+
+    def seed(tweets:, comments_each:)
+      tweets.times do
+        tweet = Tweet.create!(content: 'A tweet: https://12ft.io/')
+        tweet.resources.create!(url: 'https://12ft.io/')
+
+        comments_each.times do
+          comment = tweet.comments.create!(content: 'A comment: https://12ft.io/')
+          comment.resources.create!(url: 'https://12ft.io/')
+        end
+      end
+    end
+
+    it 'fires the same number of queries however many tweets and comments exist' do
+      seed(tweets: 1, comments_each: 1)
+      small = count_queries { post '/graphql', params: { query: query } }
+
+      seed(tweets: 2, comments_each: 3)
+      large = count_queries { post '/graphql', params: { query: query } }
+
+      expect(large).to eq(small)
+    end
+  end
 end

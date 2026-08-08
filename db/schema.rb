@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_120001) do
+  create_table "comments", force: :cascade do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "tweet_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "uuid", null: false
+    t.index ["tweet_id"], name: "index_comments_on_tweet_id"
+    t.index ["uuid"], name: "index_comments_on_uuid", unique: true
+  end
+
   create_table "resources", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -30,4 +40,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_120000) do
     t.string "uuid"
     t.index ["uuid"], name: "index_tweets_on_uuid"
   end
+
+  add_foreign_key "comments", "tweets"
 end

@@ -13,6 +13,8 @@ module Mutations
       comment = tweet.comments.new(content: content)
 
       if comment.save
+        ResourceExtractor.call(comment)
+
         {
           comment: comment,
           errors: []

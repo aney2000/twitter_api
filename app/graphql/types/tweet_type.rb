@@ -4,5 +4,6 @@ module Types
     field :message, String, null: false, method: :content
 
     field :resources, [ Types::ResourceDescriptionType ], null: false
+    field :comments, [ Types::CommentType ], null: false
   end
 end

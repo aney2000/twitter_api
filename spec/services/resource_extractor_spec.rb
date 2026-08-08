@@ -22,5 +22,17 @@ RSpec.describe ResourceExtractor do
       expect(resource.url).to eq('https://12ft.io/')
       expect(resource.image_url).to eq('https://12ft.io/og-banner.png')
     end
+
+    it 'saves nothing when the content has no urls' do
+      plain_tweet = Tweet.create!(content: 'Just a thought, no links today')
+
+      expect { ResourceExtractor.call(plain_tweet) }.not_to change(Resource, :count)
+    end
+
+    it 'skips urls whose open graph metadata could not be fetched' do
+      allow(OpenGraphExtractor).to receive(:call).with('https://12ft.io/').and_return(nil)
+
+      expect { ResourceExtractor.call(tweet) }.not_to change(Resource, :count)
+    end
   end
 end

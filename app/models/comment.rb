@@ -1,8 +1,9 @@
-class Tweet < ApplicationRecord
+class Comment < ApplicationRecord
   include GeneratesUuid
 
+  belongs_to :tweet
+
   has_many :resources, as: :resourceable, dependent: :destroy
-  has_many :comments, dependent: :destroy
 
   validates :content, presence: true
 end

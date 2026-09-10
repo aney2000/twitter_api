@@ -1,5 +1,5 @@
 class Resource < ApplicationRecord
-  belongs_to :tweet
+  belongs_to :resourceable, polymorphic: true
 
   validates :url, presence: true
 end

@@ -21,6 +21,21 @@ RSpec.describe Tweet, type: :model do
       expect(tweet.uuid).to be_present
       expect(tweet.uuid).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
     end
+
+    it 'keeps an explicitly assigned uuid instead of overwriting it' do
+      tweet = Tweet.create!(content: 'My tweet', uuid: '1231-1231-1231-1231')
+
+      expect(tweet.uuid).to eq('1231-1231-1231-1231')
+    end
+  end
+
+  describe 'uuid uniqueness' do
+    it 'is enforced at the database level' do
+      existing = Tweet.create!(content: 'first')
+      duplicate = Tweet.new(content: 'second', uuid: existing.uuid)
+
+      expect { duplicate.save!(validate: false) }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
   end
 
   describe 'associations' do

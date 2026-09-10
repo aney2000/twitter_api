@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_10_120000) do
   create_table "comments", force: :cascade do |t|
     t.text "content", null: false
     t.datetime "created_at", null: false
@@ -38,7 +38,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_120001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "uuid"
-    t.index ["uuid"], name: "index_tweets_on_uuid"
+    t.index ["uuid"], name: "index_tweets_on_uuid", unique: true
   end
 
   add_foreign_key "comments", "tweets"

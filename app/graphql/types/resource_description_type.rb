@@ -6,10 +6,7 @@ module Types
     field :image, Types::ImageType, null: false
 
     def image
-      {
-        url: object.image_url || "",
-        byteSize: 0
-      }
+      { url: object.image_url || "" }
     end
   end
 end

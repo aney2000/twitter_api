@@ -1,27 +1,34 @@
 require "nokogiri"
-require "open-uri"
 
 class OpenGraphExtractor
-  def self.call(url)
-    begin
-      html = URI.open(url).read
-    rescue StandardError => e
-      Rails.logger.error "Failed to fetch OpenGraph for #{url}: #{e.message}"
-      return nil
-    end
+  def self.call(url, **options)
+    new(**options).call(url)
+  end
 
-    doc = Nokogiri::HTML(html)
+  def initialize(fetcher: SafeHttpFetcher.new)
+    @fetcher = fetcher
+  end
 
-    extract_content = ->(property) {
-      node = doc.at_css("meta[property='#{property}']")
-      node ? node["content"] : nil
-    }
+  def call(url)
+    html = @fetcher.fetch(url)
+    return nil if html.nil?
 
+    extract(Nokogiri::HTML(html), url)
+  end
+
+  private
+
+  def extract(doc, url)
     {
-      title: extract_content.call("og:title") || extract_content.call("twitter:title"),
-      description: extract_content.call("og:description") || extract_content.call("twitter:description"),
-      url: extract_content.call("og:url") || url,
-      image_url: extract_content.call("og:image") || extract_content.call("twitter:image")
+      title: meta(doc, "og:title") || meta(doc, "twitter:title"),
+      description: meta(doc, "og:description") || meta(doc, "twitter:description"),
+      url: meta(doc, "og:url") || url,
+      image_url: meta(doc, "og:image") || meta(doc, "twitter:image")
     }
+  end
+
+  def meta(doc, property)
+    node = doc.at_css("meta[property='#{property}']")
+    node ? node["content"] : nil
   end
 end

@@ -49,4 +49,28 @@ RSpec.describe 'GraphQL Mutations: tweetCreate', type: :request do
       expect(resource.url).to eq('https://12ft.io/')
     end
   end
+
+  describe 'when the tweet is invalid' do
+    let(:mutation) do
+      <<~GQL
+        mutation($input: TweetCreateInput!) {
+          tweetCreate(input: $input) {
+            tweet { uuid }
+            errors
+          }
+        }
+      GQL
+    end
+
+    it 'returns validation errors and creates nothing' do
+      expect {
+        post '/graphql', params: { query: mutation, variables: { input: { content: '' } } }
+      }.not_to change(Tweet, :count)
+
+      data = JSON.parse(response.body).dig('data', 'tweetCreate')
+
+      expect(data['tweet']).to be_nil
+      expect(data['errors']).to include("Content can't be blank")
+    end
+  end
 end

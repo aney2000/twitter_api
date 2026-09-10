@@ -25,7 +25,6 @@ RSpec.describe 'GraphQL Queries: tweets', type: :request do
               url
               image {
                 url
-                byteSize
               }
             }
           }
@@ -51,7 +50,6 @@ RSpec.describe 'GraphQL Queries: tweets', type: :request do
       expect(first_resource['url']).to eq('https://12ft.io/')
 
       expect(first_resource['image']['url']).to eq('https://12ft.io/og-banner.png')
-      expect(first_resource['image']['byteSize']).to eq(0)
     end
   end
 

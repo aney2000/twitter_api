@@ -38,6 +38,14 @@ RSpec.describe Tweet, type: :model do
     end
   end
 
+  describe 'content' do
+    it 'is rejected as null at the database level' do
+      tweet = Tweet.new(content: nil)
+
+      expect { tweet.save!(validate: false) }.to raise_error(ActiveRecord::NotNullViolation)
+    end
+  end
+
   describe 'associations' do
     it 'can have many resources' do
       tweet = Tweet.create!(content: 'My tweet')

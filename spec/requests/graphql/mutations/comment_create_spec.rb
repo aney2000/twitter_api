@@ -97,4 +97,32 @@ RSpec.describe 'GraphQL Mutations: commentCreate', type: :request do
       expect(json.dig('data', 'commentCreate')).to be_nil
     end
   end
+
+  context 'when the comment is invalid' do
+    let(:mutation) do
+      <<~GQL
+        mutation($input: CommentCreateInput!) {
+          commentCreate(input: $input) {
+            comment { uuid }
+            errors
+          }
+        }
+      GQL
+    end
+
+    let(:variables) do
+      { input: { tweetUuid: tweet.uuid, content: '' } }
+    end
+
+    it 'returns validation errors and creates nothing' do
+      expect {
+        post '/graphql', params: { query: mutation, variables: variables }
+      }.not_to change(Comment, :count)
+
+      data = JSON.parse(response.body).dig('data', 'commentCreate')
+
+      expect(data['comment']).to be_nil
+      expect(data['errors']).to include("Content can't be blank")
+    end
+  end
 end

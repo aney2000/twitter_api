@@ -49,6 +49,9 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
+
+  # Test coverage reporting [https://github.com/simplecov-ruby/simplecov]
+  gem "simplecov", require: false
 end
 
 gem "graphql", "~> 2.6"

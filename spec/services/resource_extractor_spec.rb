@@ -34,5 +34,19 @@ RSpec.describe ResourceExtractor do
 
       expect { ResourceExtractor.call(tweet) }.not_to change(Resource, :count)
     end
+
+    it 'uses the injected url and open graph extractors' do
+      url_extractor = class_double(UrlExtractor, call: [ 'https://12ft.io/' ])
+      og_extractor = class_double(
+        OpenGraphExtractor,
+        call: { title: 'T', description: 'D', url: 'https://12ft.io/', image_url: 'https://12ft.io/i.png' }
+      )
+
+      extractor = described_class.new(url_extractor: url_extractor, og_extractor: og_extractor)
+
+      expect { extractor.call(tweet) }.to change(Resource, :count).by(1)
+      expect(url_extractor).to have_received(:call).with(tweet.content)
+      expect(og_extractor).to have_received(:call).with('https://12ft.io/')
+    end
   end
 end

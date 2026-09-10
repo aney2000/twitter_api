@@ -1,9 +1,8 @@
 class Comment < ApplicationRecord
   include GeneratesUuid
+  include Resourceable
 
   belongs_to :tweet
-
-  has_many :resources, as: :resourceable, dependent: :destroy
 
   validates :content, presence: true
 end
